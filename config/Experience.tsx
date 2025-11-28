@@ -38,7 +38,7 @@ export const experiences: Experience[] = [
     company: 'The Enterenuship Network',
     position: 'Frontend Developer',
     location: 'India (Remote)',
-    image: '/company/promote.png',
+    image: '/company/ten.jpg',
     description: [
       'Architected and developed the complete frontend infrastructure for the platform, a comprehensive solution for creating and managing promotional campaigns.',
       'Led a comprehensive codebase refactoring initiative that improved maintainability, scalability, and development velocity across the entire platform.',

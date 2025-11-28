@@ -5,6 +5,8 @@ import { ThemeProvider } from "@/components/common/ThemeProviders";
 import ReactLenis from "lenis/react";
 import { ViewTransitions } from 'next-view-transitions';
 import OnekoCat from "@/components/common/OnekoCat";
+import Footer from "@/components/common/Footer";
+
 
 
 
@@ -30,6 +32,7 @@ export default function RootLayout({
               <Navbar />
               {children}
                <OnekoCat/>
+               <Footer/>
              </ReactLenis>
           </ThemeProvider>
         
