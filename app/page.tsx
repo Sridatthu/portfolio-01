@@ -1,9 +1,12 @@
-
+import Container from "@/components/common/Container";
+import Hero from "@/components/landing/Hero";
+import Experience from "@/components/landing/Experience";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center font-sans">
-     
-    </div>
+     <Container className="min-h-screen py-16">
+      <Hero/>
+      <Experience/>
+     </Container>
   );
 }

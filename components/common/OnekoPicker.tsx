@@ -1,6 +1,5 @@
 "use client";
 
-import { AnimatePresence, motion } from "motion/react";
 import { X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
@@ -17,12 +16,11 @@ export default function OnekoPicker() {
   const [currentVariant, setCurrentVariant] = useState("classic");
 
   useEffect(() => {
-    // Check local storage for initial variant
     const stored = localStorage.getItem("oneko:variant");
     if (stored) {
       try {
         setCurrentVariant(JSON.parse(stored));
-      } catch {}
+      } catch { }
     }
 
     const handleOpen = () => setIsOpen(true);
@@ -38,75 +36,54 @@ export default function OnekoPicker() {
     setIsOpen(false);
   };
 
+  if (!isOpen) return null;
+
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setIsOpen(false)}
-            className="fixed inset-0 z-[100000] bg-black/50 backdrop-blur-sm"
-          />
-
-          {/* Modal */}
-          <div className="fixed inset-0 z-[100001] flex items-center justify-center p-4 pointer-events-none">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="w-full max-w-md bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl overflow-hidden pointer-events-auto border border-zinc-200 dark:border-zinc-800"
-            >
-              <div className="flex items-center justify-between p-4 border-b border-zinc-100 dark:border-zinc-800">
-                <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
-                  Choose your companion
-                </h2>
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="p-2 text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200 transition-colors rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800"
-                >
-                  <X size={20} />
-                </button>
-              </div>
-
-              <div className="p-4 grid grid-cols-2 sm:grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto">
-                {variants.map(([id, name]) => (
-                  <button
-                    key={id}
-                    onClick={() => handleSelect(id)}
-                    className={`
-                      group relative flex flex-col items-center gap-3 p-4 rounded-xl border transition-all duration-200
-                      ${
-                        currentVariant === id
-                          ? "border-blue-500 bg-blue-50/50 dark:bg-blue-500/10 ring-2 ring-blue-500/20"
-                          : "border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
-                      }
-                    `}
-                  >
-                    <div className="relative w-12 h-12">
-                      <div
-                        className="w-[32px] h-[32px] mx-auto"
-                        style={{
-                          backgroundImage: `url('/oneko/oneko-${id}.gif')`,
-                          backgroundPosition: "-32px -32px", // Show a specific frame (e.g., sitting/alert)
-                          transform: "scale(1.5)",
-                          transformOrigin: "center",
-                          imageRendering: "pixelated",
-                        }}
-                      />
-                    </div>
-                    <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                      {name}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-        </>
-      )}
-    </AnimatePresence>
+    <>
+      <div
+        className="fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"
+        data-state="open"
+        onClick={() => setIsOpen(false)}
+      />
+      <div
+        role="dialog"
+        data-state="open"
+        className="bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border p-6 shadow-lg duration-200 sm:max-w-lg"
+        style={{ pointerEvents: "auto" }}
+      >
+        <div className="flex flex-col gap-2 text-center sm:text-left">
+          <h2 className="text-lg leading-none font-semibold">
+            Choose your neko
+          </h2>
+        </div>
+        <div className="grid grid-cols-5 gap-4">
+          {variants.map(([id, name]) => (
+            <button
+              key={id}
+              onClick={() => handleSelect(id)}
+              className={`inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive btn-inner-shadow hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 h-9 px-4 py-2 has-[>svg]:px-3 rounded-lg border ${currentVariant === id ? "ring-2 ring-primary border-primary" : ""
+                }`}
+              aria-label={name}
+              style={{
+                width: "32px",
+                height: "32px",
+                backgroundImage: `url('/oneko/oneko-${id}.gif')`,
+                backgroundPosition: "-96px -96px",
+                backgroundRepeat: "no-repeat",
+                imageRendering: "pixelated",
+              }}
+            />
+          ))}
+        </div>
+        <button
+          type="button"
+          onClick={() => setIsOpen(false)}
+          className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 hover:cursor-pointer"
+        >
+          <X className="h-4 w-4" />
+          <span className="sr-only">Close</span>
+        </button>
+      </div>
+    </>
   );
 }
