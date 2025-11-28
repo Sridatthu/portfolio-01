@@ -1,16 +1,16 @@
-import { heroConfig, skillComponents, socialLinks } from '@/config/Hero';
-import { parseTemplate } from '@/lib/hero';
-import { cn } from '@/lib/utils';
-import { Link } from 'next-view-transitions';
-import Image from 'next/image';
-import React from 'react';
+import { heroConfig, skillComponents, socialLinks } from "@/config/Hero";
+import { parseTemplate } from "@/lib/hero";
+import { cn } from "@/lib/utils";
+import { Link } from "next-view-transitions";
+import Image from "next/image";
+import React from "react";
 
-import Container from '../common/Container';
-import Skill from '../common/Skill';
-import CV from '../svgs/CV';
-import Chat from '../svgs/Chat';
-import { Button } from '../ui/button';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+import Container from "../common/Container";
+import Skill from "../common/Skill";
+import CV from "../svgs/CV";
+import Chat from "../svgs/Chat";
+import { Button } from "../ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 const buttonIcons = {
   CV: CV,
@@ -24,7 +24,7 @@ export default function Hero() {
     const parts = parseTemplate(description.template, skills);
 
     return parts.map((part) => {
-      if (part.type === 'skill' && 'skill' in part && part.skill) {
+      if (part.type === "skill" && "skill" in part && part.skill) {
         const SkillComponent =
           skillComponents[part.skill.component as keyof typeof skillComponents];
         return (
@@ -32,13 +32,13 @@ export default function Hero() {
             <SkillComponent />
           </Skill>
         );
-      } else if (part.type === 'bold' && 'text' in part) {
+      } else if (part.type === "bold" && "text" in part) {
         return (
           <b key={part.key} className="whitespace-pre-wrap text-primary">
             {part.text}
           </b>
         );
-      } else if (part.type === 'text' && 'text' in part) {
+      } else if (part.type === "text" && "text" in part) {
         return (
           <span key={part.key} className="whitespace-pre-wrap">
             {part.text}
@@ -79,12 +79,10 @@ export default function Hero() {
           return (
             <Button
               key={index}
-              variant={button.variant as 'outline' | 'default'}
+              variant={button.variant as "outline" | "default"}
               className={cn(
-                button.variant === 'outline' &&
-                  'inset-shadow-indigo-500',
-                button.variant === 'default' &&
-                  'inset-shadow-indigo-500',
+                button.variant === "outline" && "inset-shadow-indigo-500",
+                button.variant === "default" && "inset-shadow-indigo-500"
               )}
             >
               {IconComponent && <IconComponent />}
@@ -112,6 +110,24 @@ export default function Hero() {
             </TooltipContent>
           </Tooltip>
         ))}
+      </div>
+
+      {/* Spotify Player */}
+      <div className="mt-6">
+        <div className="flex items-center gap-3 text-sm p-3 rounded-lg bg-muted/30 border border-border/50 shadow-inner">
+          <div className="w-12 h-12 rounded-md bg-muted animate-pulse"></div>
+          <div className="flex flex-col gap-1 flex-1">
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-muted-foreground font-medium">
+                Loading...
+              </span>
+            </div>
+            <div className="flex flex-col gap-1">
+              <div className="h-4 bg-muted animate-pulse rounded w-3/4"></div>
+              <div className="h-3 bg-muted animate-pulse rounded w-1/2"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </Container>
   );
