@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/common/ThemeProviders";
 import ReactLenis from "lenis/react";
 import { ViewTransitions } from 'next-view-transitions';
+import OnekoCat from "@/components/common/OnekoCat";
 
 
 
@@ -28,6 +29,7 @@ export default function RootLayout({
              <ReactLenis root>
               <Navbar />
               {children}
+               <OnekoCat/>
              </ReactLenis>
           </ThemeProvider>
         
