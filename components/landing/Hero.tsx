@@ -11,6 +11,7 @@ import CV from "../svgs/CV";
 import Chat from "../svgs/Chat";
 import { Button } from "../ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import NowPlaying  from "../common/SpotifyPlayer";
 
 const buttonIcons = {
   CV: CV,
@@ -113,22 +114,7 @@ export default function Hero() {
       </div>
 
       {/* Spotify Player */}
-      <div className="mt-6">
-        <div className="flex items-center gap-3 text-sm p-3 rounded-lg bg-muted/30 border border-border/50 shadow-inner">
-          <div className="w-12 h-12 rounded-md bg-muted animate-pulse"></div>
-          <div className="flex flex-col gap-1 flex-1">
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-muted-foreground font-medium">
-                Loading...
-              </span>
-            </div>
-            <div className="flex flex-col gap-1">
-              <div className="h-4 bg-muted animate-pulse rounded w-3/4"></div>
-              <div className="h-3 bg-muted animate-pulse rounded w-1/2"></div>
-            </div>
-          </div>
-        </div>
-      </div>
+     <NowPlaying/>
     </Container>
   );
 }
