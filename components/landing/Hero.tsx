@@ -29,7 +29,7 @@ export default function Hero() {
         const SkillComponent =
           skillComponents[part.skill.component as keyof typeof skillComponents];
         return (
-          <Skill key={part.key} name={part.skill.name} href={part.skill.href}>
+          <Skill key={part.key} name={part.skill.name}>
             <SkillComponent />
           </Skill>
         );
@@ -63,12 +63,13 @@ export default function Hero() {
 
       {/* Text Area */}
       <div className="mt-8 flex flex-col gap-2">
-        <h1 className="text-4xl font-bold">
+        <h1 className="text-4xl font-bold ">
           Hi, I&apos;m {name} — <span className="text-secondary">{title}</span>
         </h1>
 
-        <div className="mt-4 flex flex-wrap items-center gap-x-1.5 gap-y-2 text-base md:text-lg text-neutral-500 whitespace-pre-wrap">
+        <div className="mt-4 relative flex flex-wrap items-center gap-x-1.5 gap-y-2 text-base md:text-lg text-neutral-500 whitespace-pre-wrap">
           {renderDescription()}
+          <div className="absolute -top-8 -right-8 flex items-center text-xs text-muted-foreground"><svg width="80" height="30" viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-1"><path d="M5 15C5 15 15 12 30 15C45 18 55 15 65 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeDasharray="3 2"></path><path d="M5 10L10 15L5 20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" transform="rotate(-200, 7.5, 15) translate(2, 0.5)"></path><text x="25" y="10" fontSize="8" fontFamily="cursive" fill="currentColor">drag me!</text></svg></div>
         </div>
       </div>
 

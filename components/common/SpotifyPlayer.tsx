@@ -193,7 +193,7 @@ export default function NowPlaying() {
               </div>
               <span className="text-xs text-muted-foreground font-medium">{statusLabel}</span>
             </div>
-            <div className="flex flex-col min-h-[2.5rem] max-h-[2.5rem]">
+            <div className="flex flex-col min-h-10 max-h-10">
               <a
                 href={spotifyUrl}
                 target="_blank"
