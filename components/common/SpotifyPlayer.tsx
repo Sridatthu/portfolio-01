@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import { MusicLoader } from '../shimmers/MusicLoader';
 
 interface SpotifyTrack {
   name: string;
@@ -41,6 +42,7 @@ const formatTime = (seconds: number) => {
 
 export default function NowPlaying() {
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [isPlayingLoading, setIsPlayingLoading] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -93,20 +95,7 @@ export default function NowPlaying() {
   }, [isAudioPlaying]);
 
   if (error) return <div className="text-red-500">Failed to load</div>;
-  if (loading) return <div className="mt-6">
-                    <div className="flex items-center gap-3 text-sm p-3 rounded-lg bg-muted/30 border border-border/50 shadow-inner">
-                        <div className="w-12 h-12 rounded-md bg-muted animate-pulse"></div>
-                        <div className="flex flex-col gap-1 flex-1">
-                            <div className="flex items-center gap-2">
-                                <span className="text-xs text-muted-foreground font-medium">Loading...</span>
-                            </div>
-                            <div className="flex flex-col gap-1">
-                                <div className="h-4 bg-muted animate-pulse rounded w-3/4"></div>
-                                <div className="h-3 bg-muted animate-pulse rounded w-1/2"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  if (loading) return <MusicLoader />
 
   if (!displayData || (!displayData.spotify)) {
     return <div>No data available</div>;
@@ -121,13 +110,18 @@ export default function NowPlaying() {
     e?.preventDefault();
     if (!trackName) return;
 
+    if (isAudioPlaying) {
+      setIsAudioPlaying(false);
+      return;
+    }
+
+    if (audioUrl) {
+      setIsAudioPlaying(true);
+      return;
+    }
+
     try {
-      if (isAudioPlaying) {
-        setIsAudioPlaying(false);
-        return;
-      }
-
-
+      setIsPlayingLoading(true);
       const saavnTrack = await axios.get<SaavnSearchResponse>('/api/music/search?query=' + encodeURIComponent(trackName));
       if (saavnTrack.data.songs && saavnTrack.data.songs.length > 0) {
         setSaavnData(saavnTrack.data);
@@ -140,6 +134,8 @@ export default function NowPlaying() {
       }
     } catch (error) {
       console.error("Error fetching audio", error);
+    } finally {
+      setIsPlayingLoading(false);
     }
   };
 
@@ -211,10 +207,16 @@ export default function NowPlaying() {
           <button
             type="button"
             onClick={togglePlay}
+            disabled={isPlayingLoading}
             className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive btn-inner-shadow hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-9"
             aria-label={isAudioPlaying ? "Pause" : "Play"}
           >
-            {isAudioPlaying ? (
+            {isPlayingLoading ? (
+              <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            ) : isAudioPlaying ? (
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-pause h-4 w-4">
                 <rect x="6" y="4" width="4" height="16" />
                 <rect x="14" y="4" width="4" height="16" />
