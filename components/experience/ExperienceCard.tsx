@@ -4,12 +4,12 @@ import { Link } from 'next-view-transitions';
 import Image from 'next/image';
 import React from 'react';
 
-import Skill from '../common/Skill';
 import Github from '../svgs/Github';
 import LinkedIn from '../svgs/LinkedIn';
 import Website from '../svgs/Website';
 import X from '../svgs/X';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+import TechSkill from '../common/TechSkill';
 
 interface ExperienceCardProps {
   experience: Experience;
@@ -124,13 +124,13 @@ export function ExperienceCard({ experience }: ExperienceCardProps) {
         <h4 className="text-md mt-4 mb-2 font-semibold">Technologies</h4>
         <div className="flex flex-wrap gap-2">
           {experience.technologies.map((technology, techIndex: number) => (
-            <Skill
+            <TechSkill
               key={techIndex}
               name={technology.name}
               href={technology.href}
             >
               {technology.icon}
-            </Skill>
+            </TechSkill>
           ))}
         </div>
       </div>
