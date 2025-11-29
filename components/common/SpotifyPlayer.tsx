@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { MusicLoader } from '../shimmers/MusicLoader';
+import { Slider } from '../ui/slider';
 
 interface SpotifyTrack {
   name: string;
@@ -94,11 +95,11 @@ export default function NowPlaying() {
     }
   }, [isAudioPlaying]);
 
-  if (error) return <div className="text-red-500">Failed to load</div>;
+  if (error) return <MusicLoader />
   if (loading) return <MusicLoader />
 
   if (!displayData || (!displayData.spotify)) {
-    return <div>No data available</div>;
+    return <MusicLoader />
   }
 
   const trackName = displayData.spotify?.name
@@ -154,16 +155,6 @@ export default function NowPlaying() {
   const handleEnded = () => {
     setIsAudioPlaying(false);
     setCurrentTime(0);
-  };
-
-  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!audioRef.current || !duration) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const percentage = Math.min(Math.max(x / rect.width, 0), 1);
-    const newTime = percentage * duration;
-    audioRef.current.currentTime = newTime;
-    setCurrentTime(newTime);
   };
 
   const progressPercent = duration ? (currentTime / duration) * 100 : 0;
@@ -240,26 +231,18 @@ export default function NowPlaying() {
             <div className="flex items-center gap-3">
               <span className="text-xs tabular-nums text-muted-foreground w-10 text-right">{formatTime(currentTime)}</span>
 
-              {/* Slider */}
-              <div
-                className="relative flex w-full touch-none items-center select-none cursor-pointer"
-                onClick={handleSeek}
-              >
-                <span className="bg-muted relative grow overflow-hidden rounded-full h-1.5 w-full">
-                  <span
-                    className="bg-primary absolute h-full"
-                    style={{ width: `${progressPercent}%` }}
-                  ></span>
-                </span>
-                <span
-                  style={{
-                    position: 'absolute',
-                    left: `${progressPercent}%`,
-                    transform: 'translateX(-50%)'
+              <div className="relative flex w-full touch-none items-center select-none">
+                <Slider
+                  value={[progressPercent]}
+                  max={100}
+                  step={1}
+                  onValueChange={(value) => {
+                    if (!audioRef.current || !duration) return;
+                    const newTime = (value[0] / 100) * duration;
+                    audioRef.current.currentTime = newTime;
+                    setCurrentTime(newTime);
                   }}
-                >
-                  <span className="border-primary bg-background ring-ring/50 block size-4 shrink-0 rounded-full border shadow-sm transition-[color,box-shadow] hover:ring-4 focus-visible:ring-4 focus-visible:outline-hidden"></span>
-                </span>
+                />
               </div>
 
               <span className="text-xs tabular-nums text-muted-foreground w-10">{formatTime(duration)}</span>

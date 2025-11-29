@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
     if (type === 'recently-played') {
       const spotifyData = await getRecentlyPlayed(1);
       if (!spotifyData.tracks[0]) {
-        return NextResponse.json({ error: 'No recently played track' }, { status: 404 });
+        return NextResponse.json({ spotify: null }, { status: 200 });
       }
       trackData = spotifyData.tracks[0];
     } else {
